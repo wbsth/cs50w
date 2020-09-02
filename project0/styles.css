@@ -1,0 +1,37 @@
+html, body {
+    height: 75%;
+}
+
+.container {
+    height: 100%;
+}
+
+.form-rounded{
+    border-radius: 1rem;
+}
+
+.nav-link{
+    font-size: 0.9rem;
+}
+
+.btn-main{
+    color: rgb(95, 99, 104);
+    background-color: rgb(242, 242, 242);
+    border-color: rgb(242, 242, 242);
+}
+
+.btn-main:hover{
+    background-color: rgb(248, 248, 248);
+    border-color: rgb(198, 198, 198);
+    color: rgb(34, 34, 34);
+}
+
+#adv-search{
+    color: rgb(217, 48, 37);
+    font-size: 1.3rem;
+}
+
+#search-text{
+    font-size: 1.2rem;
+}
+
