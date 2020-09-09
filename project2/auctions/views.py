@@ -3,6 +3,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 
 from .models import User
 from .forms import NewAuctionForm
@@ -64,6 +65,7 @@ def register(request):
         return render(request, "auctions/register.html")
 
 
+@login_required
 def new_auction(request):
     if request.method == "POST":
         form = NewAuctionForm(request.POST)
