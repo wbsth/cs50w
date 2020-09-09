@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from .models import User
+from .forms import NewAuctionForm
 
 
 def index(request):
@@ -61,3 +62,17 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+
+
+def new_auction(request):
+    if request.method == "POST":
+        form = NewAuctionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse("index"))
+    else:
+        form = NewAuctionForm()
+
+    return render(request, "auctions/new_auction.html", {
+        "form": form
+    })
