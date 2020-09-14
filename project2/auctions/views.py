@@ -70,6 +70,8 @@ def new_auction(request):
     if request.method == "POST":
         form = NewAuctionForm(request.POST)
         if form.is_valid():
+            obj = form.save(commit=False)
+            obj.user = request.user
             form.save()
             return HttpResponseRedirect(reverse("index"))
     else:
