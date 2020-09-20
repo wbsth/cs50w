@@ -5,9 +5,12 @@ New auction
 {% endblock title %}
 
 {% block body %}
-<form action = "{% url 'new_auction' %}", method="post">
-    {% csrf_token %}
-    {{ form.as_ul }}
-    <input type="submit" value="Submit">
-</form>
+    <h5>Add new auction</h5>
+        <form action = "{% url 'new_auction' %}", method="post">
+            {% csrf_token %}
+            {{ form.as_table }}
+        {#    <button class="btn waves-effect waves-light orange" type="submit" name="action">Add</button>#}
+        </form>
+
+
 {% endblock body %}
