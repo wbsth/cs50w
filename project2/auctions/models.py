@@ -27,6 +27,10 @@ class AuctionListening(models.Model):
     current_price = models.DecimalField(decimal_places=2, max_digits=8)
     active = models.BooleanField(default=True)
 
+    def save(self, *args, **kwargs):
+        self.current_price = self.starting_bid
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.title
 
