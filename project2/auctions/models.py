@@ -20,13 +20,25 @@ class Category(models.Model):
 class AuctionListening(models.Model):
     title = models.CharField(max_length=50)
     description = models.TextField(max_length=1000)
-    starting_bid = models.DecimalField(decimal_places=2, max_digits=6)
+    starting_bid = models.DecimalField(decimal_places=2, max_digits=8)
     image_url = models.URLField(blank=True)
     category = models.ForeignKey(Category, default=None, null=True, on_delete=models.SET_NULL)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    current_price = models.DecimalField(decimal_places=2, max_digits=8)
+    active = models.BooleanField(default=True)
+
+    def save(self, *args, **kwargs):
+        self.current_price = self.starting_bid
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
+
+
+class Bid(models.Model):
+    auction = models.ForeignKey(AuctionListening, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+
 
 
 

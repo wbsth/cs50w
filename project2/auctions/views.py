@@ -4,13 +4,20 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.views.generic.list import ListView
 
-from .models import User
+from .models import User, AuctionListening
 from .forms import NewAuctionForm
 
 
-def index(request):
-    return render(request, "auctions/index.html")
+class IndexListView(ListView):
+    model = AuctionListening
+    template_name = "auctions/index.html"
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
 
 
 def login_view(request):
