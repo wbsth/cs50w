@@ -87,3 +87,9 @@ def new_auction(request):
     return render(request, "auctions/new_auction.html", {
         "form": form
     })
+
+
+def auction_view(request, pk):
+    return render(request, "auctions/auction_view.html", {
+        "pk": pk
+    })
