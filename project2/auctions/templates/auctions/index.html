@@ -19,27 +19,11 @@
                         </div>
                     </div>
                     <div class="card-action">
-                        <span>Current price: ${{ auction.starting_bid }}</span>
+                        <span>Current price: ${{ auction.current_price }}</span>
                         <a href="{% url "auction_view" pk=auction.id %}">Bid</a>
                     </div>
                 </div>
             </div>
-{#        <div class="col s12 m7">#}
-{#            <div class="card horizontal">#}
-{#            <div class="card-image">#}
-{#                <img src={{ auction.image_url }}>#}
-{#            </div>#}
-{#            <div class="card-stacked">#}
-{#                <div class="card-content">#}
-{#                    <h5>{{ auction.title }}</h5>#}
-{#                  <p>{{ auction.description }}</p>#}
-{#                </div>#}
-{#                <div class="card-action">#}
-{#                    <a href="#" class="blue-text">Bid</a>#}
-{#                </div>#}
-{#            </div>#}
-{#            </div>#}
-{#        </div>#}
     {% empty %}
         empty, ops
     {% endfor %}

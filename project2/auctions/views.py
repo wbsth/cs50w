@@ -1,14 +1,17 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.generic.list import ListView
+from django.views import View
+from django.contrib import messages
 
 from .models import User, AuctionListening
-from .forms import NewAuctionForm
+from .forms import NewAuctionForm, BidForm
 
+from decimal import Decimal
 
 class IndexListView(ListView):
     model = AuctionListening
@@ -79,7 +82,7 @@ def new_auction(request):
         if form.is_valid():
             obj = form.save(commit=False)
             obj.user = request.user
-            form.save()
+            obj.save()
             return HttpResponseRedirect(reverse("index"))
     else:
         form = NewAuctionForm()
@@ -90,6 +93,28 @@ def new_auction(request):
 
 
 def auction_view(request, pk):
+    auction = get_object_or_404(AuctionListening, pk=pk)
+    if request.method == "POST":
+        bid_form = BidForm(request.POST, auction=auction)
+        if bid_form.is_valid():
+            temp = bid_form.save(commit=False)
+            temp.user = request.user
+            temp.auction = auction
+            temp.save()
+            print(auction.current_price)
+            auction.current_price = temp.amount
+            print(auction.current_price)
+            auction.save()
+            print(auction.current_price)
+            # auction.save(update_fields=['current_price'])
+    else:
+        minimum_bid = auction.current_price + Decimal(0.01).quantize(Decimal('1.00'))
+        bid_form = BidForm(initial={
+            "amount": minimum_bid
+        },
+        auction=auction)
     return render(request, "auctions/auction_view.html", {
-        "pk": pk
+        "auction": auction,
+        "bid_form": bid_form
     })
+
