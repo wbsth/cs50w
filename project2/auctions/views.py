@@ -95,6 +95,9 @@ def new_auction(request):
 
 def auction_view(request, pk):
     auction = get_object_or_404(AuctionListening, pk=pk)
+
+    favoured = request.user in auction.favoured.all()
+
     if request.method == "POST":
         bid_form = BidForm(request.POST, auction=auction)
         if bid_form.is_valid() and request.user.is_authenticated:
@@ -113,5 +116,29 @@ def auction_view(request, pk):
 
     return render(request, "auctions/auction_view.html", {
         "auction": auction,
-        "bid_form": bid_form
+        "bid_form": bid_form,
+        "favoured": favoured
     })
+
+
+def favourite_post(request, pk):
+    # check if that auction is favoured by user or not
+    if request.user.is_authenticated:
+        auction = AuctionListening.objects.get(pk=pk)
+        if request.user in auction.favoured.all():
+            # User already favoured, unfavourite auction
+            auction.favoured.remove(request.user)
+        else:
+            # add auction to favourites
+            auction.favoured.add(request.user)
+    return HttpResponseRedirect(reverse("auction_view", args=[pk]))
+
+
+def end_auction(request, pk):
+    auction = AuctionListening.objects.get(pk=pk)
+    if request.user.is_authenticated and auction.user == request.user:
+        # user is authenticated, and owner of that auction
+        auction.active = False
+        auction.save()
+
+    return HttpResponseRedirect(reverse("auction_view", args=[pk]))

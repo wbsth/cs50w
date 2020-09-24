@@ -26,6 +26,7 @@ class AuctionListening(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     current_price = models.DecimalField(decimal_places=2, max_digits=8)
     active = models.BooleanField(default=True)
+    favoured = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="user_favoured")
 
     def save(self, *args, **kwargs):
         if not self.pk:
@@ -45,9 +46,3 @@ class Bid(models.Model):
         return f"{self.amount} bid on {self.auction} by {self.user}"
 
 
-class Favorites(models.Model):
-    auction = models.ForeignKey(AuctionListening, on_delete=models.CASCADE)
-    users = models.ManyToManyField(settings.AUTH_USER_MODEL)
-
-    def __str__(self):
-        return f"{self.auction.title} (id:{self.auction.id})"

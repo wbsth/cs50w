@@ -46,8 +46,14 @@
 
                     {% if user.is_authenticated %}
                         <div class="row">
-                            <a class="waves-effect waves-light btn">Add to watchlist</a>
-                            <a class="waves-effect waves-light btn">End auction</a>
+                            {% if user == auction.user %}
+                                <a class="btn waves-effect waves-light orange" href="{% url 'end_auction' pk=auction.pk %}">End auction</a>
+                            {% endif %}
+                            {% if favoured %}
+                                <a class="btn waves-effect waves-light orange" href="{% url 'favourite_post' pk=auction.pk %}">Remove from watchlist</a>
+                            {% else %}
+                                <a class="btn waves-effect waves-light orange" href="{% url 'favourite_post' pk=auction.pk %}">Add to watchlist</a>
+                            {% endif %}
                         </div>
                     {% endif %}
 
