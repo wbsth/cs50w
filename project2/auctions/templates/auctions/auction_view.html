@@ -27,32 +27,35 @@
                     <div class="row">
                         <form class="col s12" action="#", method="post">
                             <div class="row">
-                                <div class="input-field col s8">
-                                    {% csrf_token %}
-                                    {{ bid_form }}
-                                </div>
-                                <div class="input-field col s4 right-align">
-                                    <button class="btn waves-effect waves-light orange" type="submit" name="action">Bid</button>
-                                </div>
+                                {% if user.is_authenticated %}
+                                    <div class="input-field col s8">
+                                        {% csrf_token %}
+                                        {{ bid_form }}
+                                    </div>
+                                    <div class="input-field col s4 right-align">
+                                        <button class="btn waves-effect waves-light orange" type="submit" name="action">Bid</button>
+                                    </div>
+                                {% else %}
+                                    <div class="col s12">
+                                        Please log in to bid on auctions
+                                    </div>
+                                {% endif %}
                             </div>
                         </form>
                     </div>
+
+                    {% if user.is_authenticated %}
+                        <div class="row">
+                            <a class="waves-effect waves-light btn">Add to watchlist</a>
+                            <a class="waves-effect waves-light btn">End auction</a>
+                        </div>
+                    {% endif %}
+
                 </div>
                 <div class="col l6 m6 s12">
                     {{ auction.description }}
                 </div>
             </div>
-
-{#            <div class="row">#}
-{#                <div class="col l6 m6 s12">#}
-{#                    {% if user.is_authenticated %}#}
-{#                        <a class="waves-effect waves-light btn">Add to watchlist</a>#}
-{#                    {% endif %}#}
-{#                </div>#}
-{#            </div>#}
         </div>
-{#        <div class="card-action">#}
-{#            TestAction#}
-{#        </div>#}
     </div>
 {% endblock body %}

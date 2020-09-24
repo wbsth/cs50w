@@ -13,6 +13,7 @@ from .forms import NewAuctionForm, BidForm
 
 from decimal import Decimal
 
+
 class IndexListView(ListView):
     model = AuctionListening
     template_name = "auctions/index.html"
@@ -96,25 +97,21 @@ def auction_view(request, pk):
     auction = get_object_or_404(AuctionListening, pk=pk)
     if request.method == "POST":
         bid_form = BidForm(request.POST, auction=auction)
-        if bid_form.is_valid():
+        if bid_form.is_valid() and request.user.is_authenticated:
             temp = bid_form.save(commit=False)
             temp.user = request.user
             temp.auction = auction
             temp.save()
-            print(auction.current_price)
             auction.current_price = temp.amount
-            print(auction.current_price)
             auction.save()
-            print(auction.current_price)
-            # auction.save(update_fields=['current_price'])
     else:
         minimum_bid = auction.current_price + Decimal(0.01).quantize(Decimal('1.00'))
         bid_form = BidForm(initial={
             "amount": minimum_bid
         },
-        auction=auction)
+            auction=auction)
+
     return render(request, "auctions/auction_view.html", {
         "auction": auction,
         "bid_form": bid_form
     })
-
