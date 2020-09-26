@@ -26,7 +26,7 @@ class AuctionListening(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     current_price = models.DecimalField(decimal_places=2, max_digits=8)
     active = models.BooleanField(default=True)
-    favoured = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="user_favoured")
+    favoured = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="user_favoured", blank=True)
 
     def save(self, *args, **kwargs):
         if not self.pk:

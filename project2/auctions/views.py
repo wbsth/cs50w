@@ -5,10 +5,11 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.generic.list import ListView
+from django.db.models import Max
 from django.views import View
 from django.contrib import messages
 
-from .models import User, AuctionListening
+from .models import User, AuctionListening, Bid
 from .forms import NewAuctionForm, BidForm
 
 from decimal import Decimal
@@ -95,8 +96,11 @@ def new_auction(request):
 
 def auction_view(request, pk):
     auction = get_object_or_404(AuctionListening, pk=pk)
-
     favoured = request.user in auction.favoured.all()
+    try:
+        top_bid = auction.bid_set.all().order_by("-amount")[0]
+    except:
+        top_bid = None
 
     if request.method == "POST":
         bid_form = BidForm(request.POST, auction=auction)
@@ -117,7 +121,8 @@ def auction_view(request, pk):
     return render(request, "auctions/auction_view.html", {
         "auction": auction,
         "bid_form": bid_form,
-        "favoured": favoured
+        "favoured": favoured,
+        "top_bid": top_bid
     })
 
 
