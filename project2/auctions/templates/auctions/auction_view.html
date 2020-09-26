@@ -75,6 +75,7 @@
                     No comments yet!
                 {% endfor %}
 
+            {% if user.is_authenticated %}
                 <h5>Post your comment:</h5>
                 <div class="row">
                     <form method="post">
@@ -87,7 +88,7 @@
                         </div>
                     </form>
                 </div>
-
+            {% endif %}
 
             </div>
         </div>
