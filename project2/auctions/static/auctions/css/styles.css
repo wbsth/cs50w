@@ -7,3 +7,15 @@
   main {
     flex: 1 0 auto;
   }
+
+  .comment-box{
+      margin-bottom: 1em;
+  }
+
+  .comment-author{
+      font-weight: bold;
+  }
+
+  .comment-date{
+      font-weight: lighter;
+  }

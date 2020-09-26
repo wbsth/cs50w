@@ -34,7 +34,7 @@
                                             {{ bid_form }}
                                         </div>
                                         <div class="input-field col s4 right-align">
-                                            <button class="btn waves-effect waves-light orange" type="submit" name="action">Bid</button>
+                                            <button class="btn waves-effect waves-light orange" type="submit" name="bid">Bid</button>
                                         </div>
                                     {% else %}
                                         <div class="col s12">
@@ -55,14 +55,40 @@
                                     <a class="btn waves-effect waves-light orange" href="{% url 'favourite_post' pk=auction.pk %}">Add to watchlist</a>
                                 {% endif %}
                             </div>
-                    {% endif %}
-                    {% else %}
-                        <div class="card-panel green lighten-2">That auction was won by {{ top_bid.user }} with ${{ top_bid.amount }} bid.</div>
-                    {% endif %}
+                        {% endif %}
+                        {% else %}
+                            <div class="card-panel green lighten-2">That auction was won by {{ top_bid.user }} with ${{ top_bid.amount }} bid.</div>
+                        {% endif %}
                 </div>
                 <div class="col l6 m6 s12">
                     {{ auction.description }}
                 </div>
+            </div>
+            <div class="row">
+                <h4>Comments:</h4>
+                {% for comment in comments %}
+                    <div class="comment-box">
+                        <span class="comment-author">{{ comment.user }}</span> <span class="comment-date">{{ comment.created_on }}</span>
+                        <p>{{ comment.body }}</p>
+                    </div>
+                {% empty %}
+                    No comments yet!
+                {% endfor %}
+
+                <h5>Post your comment:</h5>
+                <div class="row">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="input-field col s8">
+                            {{ comment_form|materializecss }}
+                        </div>
+                        <div class="input-field col s4">
+                            <button class="btn waves-effect waves-light orange" type="submit" name="comment">Submit comment</button>
+                        </div>
+                    </form>
+                </div>
+
+
             </div>
         </div>
     </div>

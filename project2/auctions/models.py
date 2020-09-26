@@ -46,3 +46,14 @@ class Bid(models.Model):
         return f"{self.amount} bid on {self.auction} by {self.user}"
 
 
+class Comment(models.Model):
+    auction = models.ForeignKey(AuctionListening, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    body = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_on']
+
+    def __str__(self):
+        return f"{self.user} comment on {self.auction}"
