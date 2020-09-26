@@ -11,6 +11,7 @@ urlpatterns = [
     path("auction/<int:pk>/", views.auction_view, name='auction_view'),
     path("auction/<int:pk>/favourite", views.favourite_post, name='favourite_post'),
     path("auction/<int:pk>/end", views.end_auction, name="end_auction"),
-    path("bookmarks", views.bookmarks, name="bookmarks")
-    path("categories", views.categories, name="categories")
+    path("bookmarks", views.bookmarks, name="bookmarks"),
+    path("categories", views.CategoriesView.as_view(), name="categories"),
+    path("categories/<slug:slug>", views.CategoryListings.as_view(), name="category_listings")
 ]

@@ -5,11 +5,13 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
+from django.views.generic.base import TemplateView
 from django.db.models import Max
 from django.views import View
 from django.contrib import messages
 
-from .models import User, AuctionListening, Bid
+from .models import User, AuctionListening, Bid, Category
 from .forms import NewAuctionForm, BidForm, CommentForm
 
 from decimal import Decimal
@@ -175,5 +177,23 @@ def bookmarks(request):
                   )
 
 
-def categories(request):
-    return redirect("index")
+class CategoriesView(ListView):
+    template_name = "auctions/categories.html"
+    model = Category
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+
+class CategoryListings(ListView):
+    template_name = "auctions/category_listings.html"
+    model = AuctionListening
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["category"] = self.kwargs["slug"].title()
+        return context
+
+    def get_queryset(self):
+        return AuctionListening.objects.filter(category__slug=self.kwargs["slug"], active=True)

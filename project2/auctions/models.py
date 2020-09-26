@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
 from django.urls import reverse
-
+from django.utils.text import slugify
 
 class User(AbstractUser):
     pass
@@ -10,12 +10,20 @@ class User(AbstractUser):
 
 class Category(models.Model):
     name = models.CharField(max_length=20)
+    slug = models.SlugField(null=False, unique=True)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        return super(Category, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.name
 
     class Meta:
         verbose_name_plural = "categories"
+
+    def get_absolute_url(self):
+        return reverse('category_listings', kwargs={'slug': self.slug})
 
 
 class AuctionListening(models.Model):
