@@ -118,6 +118,7 @@ def auction_view(request, pk):
                 temp.save()
                 auction.current_price = temp.amount
                 auction.save()
+                return redirect(auction_view, pk=auction.pk)
 
         # new comment was submitted
         elif 'comment' in request.POST:
@@ -128,8 +129,6 @@ def auction_view(request, pk):
                 temp.auction = auction
                 temp.save()
                 return redirect(auction_view, pk=auction.pk)
-            minimum_bid = auction.current_price + Decimal(0.01).quantize(Decimal('1.00'))
-            bid_form = BidForm(initial={"amount": minimum_bid}, auction=auction)
 
     else:
         minimum_bid = auction.current_price + Decimal(0.01).quantize(Decimal('1.00'))
