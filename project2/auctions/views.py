@@ -165,3 +165,15 @@ def end_auction(request, pk):
         auction.save()
 
     return HttpResponseRedirect(reverse("auction_view", args=[pk]))
+
+
+@login_required
+def bookmarks(request):
+    bkmrk = request.user.user_favoured.all()
+    return render(request, "auctions/bookmarks.html",
+                  {"bookmarks": bkmrk}
+                  )
+
+
+def categories(request):
+    return redirect("index")

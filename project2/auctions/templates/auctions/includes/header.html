@@ -3,7 +3,9 @@
           <a href="{% url "index" %}" class="brand-logo">Auctions</a>
           <ul id="nav-mobile" class="right hide-on-med-and-down">
                 <li><a href="{% url "index" %}">Active Listings</a></li>
+                <li><a href="{% url "categories" %}">Categories</a></li>
                 <li><a href="{% url "new_auction" %}">New Auction</a></li>
+                <li><a href="{% url "bookmarks" %}">Bookmarks</a></li>
                 {% if user.is_authenticated %}
                     <li><a href="{% url "logout" %}">Logout</a></li>
                 {% else %}
