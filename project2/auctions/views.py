@@ -1,13 +1,18 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.generic.list import ListView
+from django.db.models import Max
+from django.views import View
+from django.contrib import messages
 
-from .models import User, AuctionListening
-from .forms import NewAuctionForm
+from .models import User, AuctionListening, Bid
+from .forms import NewAuctionForm, BidForm
+
+from decimal import Decimal
 
 
 class IndexListView(ListView):
@@ -79,7 +84,7 @@ def new_auction(request):
         if form.is_valid():
             obj = form.save(commit=False)
             obj.user = request.user
-            form.save()
+            obj.save()
             return HttpResponseRedirect(reverse("index"))
     else:
         form = NewAuctionForm()
@@ -87,3 +92,58 @@ def new_auction(request):
     return render(request, "auctions/new_auction.html", {
         "form": form
     })
+
+
+def auction_view(request, pk):
+    auction = get_object_or_404(AuctionListening, pk=pk)
+    favoured = request.user in auction.favoured.all()
+    try:
+        top_bid = auction.bid_set.all().order_by("-amount")[0]
+    except:
+        top_bid = None
+
+    if request.method == "POST":
+        bid_form = BidForm(request.POST, auction=auction)
+        if bid_form.is_valid() and request.user.is_authenticated:
+            temp = bid_form.save(commit=False)
+            temp.user = request.user
+            temp.auction = auction
+            temp.save()
+            auction.current_price = temp.amount
+            auction.save()
+    else:
+        minimum_bid = auction.current_price + Decimal(0.01).quantize(Decimal('1.00'))
+        bid_form = BidForm(initial={
+            "amount": minimum_bid
+        },
+            auction=auction)
+
+    return render(request, "auctions/auction_view.html", {
+        "auction": auction,
+        "bid_form": bid_form,
+        "favoured": favoured,
+        "top_bid": top_bid
+    })
+
+
+def favourite_post(request, pk):
+    # check if that auction is favoured by user or not
+    if request.user.is_authenticated:
+        auction = AuctionListening.objects.get(pk=pk)
+        if request.user in auction.favoured.all():
+            # User already favoured, unfavourite auction
+            auction.favoured.remove(request.user)
+        else:
+            # add auction to favourites
+            auction.favoured.add(request.user)
+    return HttpResponseRedirect(reverse("auction_view", args=[pk]))
+
+
+def end_auction(request, pk):
+    auction = AuctionListening.objects.get(pk=pk)
+    if request.user.is_authenticated and auction.user == request.user:
+        # user is authenticated, and owner of that auction
+        auction.active = False
+        auction.save()
+
+    return HttpResponseRedirect(reverse("auction_view", args=[pk]))

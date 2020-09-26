@@ -8,3 +8,6 @@ class AuctionAdmin(admin.ModelAdmin):
 
 admin.site.register(Category)
 admin.site.register(AuctionListening, AuctionAdmin)
+# admin.site.register(Favorites)
+admin.site.register(Bid)
+admin.site.register(User)
