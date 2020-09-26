@@ -1,0 +1,19 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %} Bookmarks {% endblock title %}
+
+{% block body %}
+<div class="row">
+    <div class="col s12">
+        <h4>Bookmarks</h4>
+        {% for auction in bookmarks %}
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-title"><a href="{{ auction.get_absolute_url }}">{{ auction.title }}</a></div>
+                    <p>{{ auction.description }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock body %}

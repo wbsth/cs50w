@@ -1,0 +1,18 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}Categories{% endblock title %}
+
+{% block body %}
+    <div class="row">
+        <div class="col s12">
+            <h4>Categories:</h4>
+            {% for category in object_list %}
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-title"><a href="{{ category.get_absolute_url }}">{{ category.name }}</a></div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock body %}

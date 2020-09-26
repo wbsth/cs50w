@@ -1,0 +1,46 @@
+<nav class="light-blue lighten-1" role="navigation">
+    <div class="nav-wrapper container">
+          <a href="{% url "index" %}" class="brand-logo">Auctions</a>
+          <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="{% url "index" %}">Active Listings</a></li>
+                <li><a href="{% url "categories" %}">Categories</a></li>
+                <li><a href="{% url "new_auction" %}">New Auction</a></li>
+                <li><a href="{% url "bookmarks" %}">Bookmarks</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url "logout" %}">Logout</a></li>
+                {% else %}
+                    <li><a href="{% url "login" %}">Log in</a></li>
+                    <li><a href="{% url "register" %}">Register</a></li>
+                {% endif %}
+          </ul>
+    </div>
+</nav>
+{#<h1>Auctions</h1>#}
+{#<div>#}
+{#    {% if user.is_authenticated %}#}
+{#        Signed in as <strong>{{ user.username }}</strong>.#}
+{#    {% else %}#}
+{#        Not signed in.#}
+{#    {% endif %}#}
+{#</div>#}
+{#<ul class="nav">#}
+{#    <li class="nav-item">#}
+{#        <a class="nav-link" href="{% url 'index' %}">Active Listings</a>#}
+{#    </li>#}
+{#    <li class="nav-item">#}
+{#        <a class="nav-link" href="{% url 'new_auction' %}">New auction</a>#}
+{#    </li>#}
+{#    {% if user.is_authenticated %}#}
+{#        <li class="nav-item">#}
+{#            <a class="nav-link" href="{% url 'logout' %}">Log Out</a>#}
+{#        </li>#}
+{#    {% else %}#}
+{#        <li class="nav-item">#}
+{#            <a class="nav-link" href="{% url 'login' %}">Log In</a>#}
+{#        </li>#}
+{#        <li class="nav-item">#}
+{#            <a class="nav-link" href="{% url 'register' %}">Register</a>#}
+{#        </li>#}
+{#    {% endif %}#}
+{#</ul>#}
+{#<hr>#}

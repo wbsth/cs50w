@@ -1,0 +1,14 @@
+{% extends "auctions/layout.html" %}
+{% load materializecss %}
+
+{% block title %}
+New auction
+{% endblock title %}
+
+{% block body %}
+    <form action="#" method="post">
+        {% csrf_token %}
+        {{ form|materializecss }}
+        <button class="btn waves-effect waves-light orange" type="submit" name="action">Add</button>
+    </form>
+{% endblock body %}
