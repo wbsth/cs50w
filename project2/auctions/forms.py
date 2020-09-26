@@ -1,5 +1,5 @@
 from django import forms
-from auctions.models import AuctionListening, Category, Bid
+from auctions.models import AuctionListening, Category, Bid, Comment
 
 
 class NewAuctionForm(forms.ModelForm):
@@ -24,4 +24,9 @@ class BidForm(forms.ModelForm):
         model = Bid
         fields = ['amount']
 
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['body']
 
