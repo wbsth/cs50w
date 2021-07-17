@@ -22,7 +22,10 @@ function compose_email() {
   document.querySelector('#compose-body').value = '';
 
   // Turn off default button send behaviour
-  // document.querySelector('input[type="submit"]').disabled = true;
+  document.querySelector('#compose-form').addEventListener("submit", function(evt){
+    evt.preventDefault();
+    //window.history.back();
+  }, true);
 
   // Add event listener to send email button
   document.querySelector('input[type="submit"]').addEventListener('click', send_email);
