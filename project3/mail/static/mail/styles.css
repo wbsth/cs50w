@@ -1,0 +1,29 @@
+textarea {
+    min-height: 400px;
+}
+
+.read{
+    background-color: darkgray;
+    cursor: pointer;
+}
+
+.unread{
+    background-color: whitesmoke;
+    cursor: pointer;
+}
+
+.email-sender{
+    font-weight: bold;
+}
+
+.email-date{
+    text-align: right;
+}
+
+.email-link, .email-link:hover{
+    color: black;
+}
+
+.email-header{
+    font-weight: bold;
+}
