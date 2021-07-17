@@ -37,25 +37,15 @@ function load_mailbox(mailbox) {
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
 
-  // Add the email table header if it does not exist
+  // Add the email list container
   if(document.getElementById("email-table") == null){
     const element = document.createElement('div');
-    element.innerHTML = '<table class="table" id="email-table">' +
-      '<thead>' +
-      '<thead>' +
-      '<tr>' +
-      '<th scope="col">Sender</th>' +
-      '<th scope="col">Subject</th>' +
-      '<th scope="col">Date</th>' +
-      '</tr>' +
-      '</thead>' +
-      '<tbody id="emails-table-body">'+
-      '</tbody>'+
-      '</table>';
+    element.id = "emails-table";
+
   document.querySelector('div[id="emails-view"]').append(element);
   }
 
-  let tableBody = document.querySelector('tbody[id="emails-table-body"]');
+  let tableBody = document.querySelector('div[id="emails-table"]');
 
   // Clear old emails
   tableBody.innerHTML = '';
@@ -68,17 +58,15 @@ function load_mailbox(mailbox) {
   .then(emails => {
     emails.forEach(function (email){
       console.log(email);
-      const temp_element = document.createElement('tr');
-      temp_element.classList.add(`${email.read?'read':'unread'}`)
-      temp_element.innerHTML= `<td>${email.sender}</td>` +
-          `<td>${email.subject}</td>` +
-          `<td>${email.timestamp}</td>`
+      const temp_element = document.createElement('div');
+      temp_element.classList.add(`${email.read?'read':'unread'}`, 'row', 'border', 'm-1')
+      temp_element.innerHTML= `<div class="col-sm-3 email-sender">${email.sender}</div>
+            <div class="col-sm-6 email-title">${email.subject}</div>
+            <div class="col-sm-3 email-date">${email.timestamp}</div>`;
       tableBody.append(temp_element);
       temp_element.addEventListener('click', ()=>display_email(email.id));
     })
 });
-
-
 }
 
 function send_email(){
@@ -101,6 +89,8 @@ function send_email(){
     console.log(result);
     console.log('test');
     });
+
+  load_mailbox('sent');
 }
 
 function display_email(number){

@@ -11,3 +11,11 @@ textarea {
     background-color: whitesmoke;
     cursor: pointer;
 }
+
+.email-sender{
+    font-weight: bold;
+}
+
+.email-date{
+    text-align: right;
+}
