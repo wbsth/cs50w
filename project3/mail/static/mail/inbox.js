@@ -14,6 +14,7 @@ function compose_email() {
 
   // Show compose view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
+  document.querySelector('#single-email-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'block';
 
   // Clear out composition fields
@@ -35,13 +36,14 @@ function load_mailbox(mailbox) {
   
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
+  document.querySelector('#single-email-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'none';
 
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
 
   // Add the email list container
-  if(document.getElementById("email-table") == null){
+  if(document.getElementById("emails-table") == null){
     const element = document.createElement('div');
     element.id = "emails-table";
 
@@ -61,11 +63,15 @@ function load_mailbox(mailbox) {
   .then(emails => {
     emails.forEach(function (email){
       console.log(email);
-      const temp_element = document.createElement('div');
-      temp_element.classList.add(`${email.read?'read':'unread'}`, 'row', 'border', 'm-1')
-      temp_element.innerHTML= `<div class="col-sm-3 email-sender">${email.sender}</div>
-            <div class="col-sm-6 email-title">${email.subject}</div>
-            <div class="col-sm-3 email-date">${email.timestamp}</div>`;
+      const temp_element = document.createElement('a');
+      //temp_element.setAttribute('href', email.id);
+      temp_element.classList.add('email-link');
+      temp_element.innerHTML= `
+            <div class="${email.read?'read':'unread'} row border m-1">
+                <div class="col-sm-3 email-sender">${email.sender}</div>
+                <div class="col-sm-6 email-title">${email.subject}</div>
+                <div class="col-sm-3 email-date">${email.timestamp}</div>
+            </div>`;
       tableBody.append(temp_element);
       temp_element.addEventListener('click', ()=>display_email(email.id));
     })
@@ -98,14 +104,28 @@ function send_email(){
 
 function display_email(number){
 
-  document.querySelector('#email-table').style.display = 'none';
-  document.querySelector('#emails-view').innerHTML = `<h3>Test</h3>`;
+  document.querySelector('#emails-table').style.display = 'none';
+  document.querySelector('#compose-view').style.display = 'none';
+  document.querySelector('#single-email-view').style.display = 'block';
+  document.querySelector('#emails-view').innerHTML = ``;
 
   fetch(`/emails/${number}`)
   .then(response => response.json())
-  .then(email => {
-      // Print email
-      console.log(email)
-      fetchedEmail = email;
-  });
+  .then(email => processEmail(email));
+
+  let processEmail = (email) =>{
+      document.querySelector("#single-email-from").innerHTML=`${email.sender}`;
+      document.querySelector("#single-email-to").innerHTML=`${email.recipients}`;
+      document.querySelector("#single-email-subject").innerHTML=`${email.subject}`;
+      document.querySelector("#single-email-timestamp").innerHTML=`${email.timestamp}`;
+      document.querySelector("#single-email-content").innerHTML=`${email.body}`;
+
+      // mark email as read
+    fetch(`/emails/${email.id}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      read: true})
+    })
+  }
+
 }

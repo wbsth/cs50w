@@ -30,6 +30,34 @@
             <input type="submit" class="btn btn-primary"/>
         </form>
     </div>
+
+    <div id="single-email-view" class="container">
+        <div class="row">
+            <div class="col-sm-2 email-header">From:</div>
+            <div class="col-sm-4" id="single-email-from"></div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2 email-header">To:</div>
+            <div class="col-sm-4" id="single-email-to"></div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2 email-header">Subject:</div>
+            <div class="col-sm-4" id="single-email-subject"></div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2 email-header">Timestamp:</div>
+            <div class="col-sm-4" id="single-email-timestamp"></div>
+        </div>
+
+        <hr/>
+        <div class="row">
+            <div class="col email-content" id="single-email-content"></div>
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block script %}

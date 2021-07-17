@@ -19,3 +19,11 @@ textarea {
 .email-date{
     text-align: right;
 }
+
+.email-link, .email-link:hover{
+    color: black;
+}
+
+.email-header{
+    font-weight: bold;
+}
