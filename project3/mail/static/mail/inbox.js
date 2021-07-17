@@ -1,3 +1,5 @@
+let current_view;
+
 document.addEventListener('DOMContentLoaded', function() {
 
   // Use buttons to toggle between views
@@ -33,7 +35,10 @@ function compose_email() {
 }
 
 function load_mailbox(mailbox) {
-  
+
+  // Store current view in variable
+  current_view = mailbox;
+
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
   document.querySelector('#single-email-view').style.display = 'none';
@@ -134,20 +139,32 @@ function display_email(number){
       let unarchiveButton = old_unarchiveButton.cloneNode(true);
       old_unarchiveButton.parentNode.replaceChild(unarchiveButton, old_unarchiveButton);
 
-      switch (email.archived){
-        case false:
-          // email is not archived
-          archiveButton.style.display='inline';
-          unarchiveButton.style.display='none';
-          archiveButton.addEventListener('click', ()=>archive_email(email.id));
-          break;
-        case true:
-          // email is archived
-          archiveButton.style.display='none';
-          unarchiveButton.style.display='inline';
-          unarchiveButton.addEventListener('click', ()=>unarchive_email(email.id));
-          break;
+      let old_replyButton = document.querySelector("#reply-button");
+      let replyButton = old_replyButton.cloneNode(true);
+      old_replyButton.parentNode.replaceChild(replyButton, old_replyButton);
+
+      if(current_view == 'sent'){
+        archiveButton.style.display='none';
       }
+      else{
+        switch (email.archived){
+          case false:
+            // email is not archived
+            archiveButton.style.display='inline';
+            unarchiveButton.style.display='none';
+            archiveButton.addEventListener('click', ()=>archive_email(email.id));
+            break;
+          case true:
+            // email is archived
+            archiveButton.style.display='none';
+            unarchiveButton.style.display='inline';
+            unarchiveButton.addEventListener('click', ()=>unarchive_email(email.id));
+            break;
+        }
+      }
+
+      replyButton.addEventListener('click', ()=>reply_email(email));
+
 
 
   }
@@ -181,6 +198,10 @@ function unarchive_email(number){
   )
 }
 
-function debug_log(){
-  console.log("AAAYYAYAYAY");
+function reply_email(email){
+  compose_email();
+  document.querySelector('#compose-recipients').value = email.recipients;
+  document.querySelector('#compose-subject').value = `Re: ${email.subject}`;
+  document.querySelector('#compose-body').value = `On ${email.timestamp} ${email.sender} wrote:\n${email.body}`;
 }
+
