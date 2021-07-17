@@ -56,15 +56,14 @@ function load_mailbox(mailbox) {
   tableBody.innerHTML = '';
 
   // Fetch the emails
-  let fetch_url = `emails/${mailbox}`
-
-  fetch(fetch_url)
+  fetch(`emails/${mailbox}`)
   .then(response => response.json())
-  .then(emails => {
+  .then(emails => processEmails(emails));
+
+  let processEmails = (emails) => {
     emails.forEach(function (email){
-      console.log(email);
+      //console.log(email);
       const temp_element = document.createElement('a');
-      //temp_element.setAttribute('href', email.id);
       temp_element.classList.add('email-link');
       temp_element.innerHTML= `
             <div class="${email.read?'read':'unread'} row border m-1">
@@ -75,7 +74,7 @@ function load_mailbox(mailbox) {
       tableBody.append(temp_element);
       temp_element.addEventListener('click', ()=>display_email(email.id));
     })
-});
+  }
 }
 
 function send_email(){
@@ -94,10 +93,9 @@ function send_email(){
   })
   .then(response => response.json())
   .then(result => {
-    // Print result
-    console.log(result);
-    console.log('test');
     });
+
+  console.log('email sent');
 
   load_mailbox('sent');
 }
@@ -121,11 +119,68 @@ function display_email(number){
       document.querySelector("#single-email-content").innerHTML=`${email.body}`;
 
       // mark email as read
-    fetch(`/emails/${email.id}`, {
-    method: 'PUT',
-    body: JSON.stringify({
-      read: true})
-    })
-  }
+      fetch(`/emails/${email.id}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        read: true})
+      })
 
+      // handle archive/unarchive behaviour
+      let old_archiveButton = document.querySelector("#archive-button");
+      let archiveButton = old_archiveButton.cloneNode(true);
+      old_archiveButton.parentNode.replaceChild(archiveButton, old_archiveButton);
+
+      let old_unarchiveButton = document.querySelector("#unarchive-button");
+      let unarchiveButton = old_unarchiveButton.cloneNode(true);
+      old_unarchiveButton.parentNode.replaceChild(unarchiveButton, old_unarchiveButton);
+
+      switch (email.archived){
+        case false:
+          // email is not archived
+          archiveButton.style.display='inline';
+          unarchiveButton.style.display='none';
+          archiveButton.addEventListener('click', ()=>archive_email(email.id));
+          break;
+        case true:
+          // email is archived
+          archiveButton.style.display='none';
+          unarchiveButton.style.display='inline';
+          unarchiveButton.addEventListener('click', ()=>unarchive_email(email.id));
+          break;
+      }
+
+
+  }
+}
+
+function archive_email(number){
+  // mark email as archived
+  fetch(`/emails/${number}`, {
+  method: 'PUT',
+  body: JSON.stringify({
+    archived: true})
+  }).then(
+      ()=>{
+        console.log("ARCHIVED");
+        load_mailbox('archive')
+      }
+  )
+}
+
+function unarchive_email(number){
+  // mark email as unarchived
+  fetch(`/emails/${number}`, {
+  method: 'PUT',
+  body: JSON.stringify({
+    archived: false})
+  }).then(
+      ()=>{
+        console.log("UNARCHIVED");
+        load_mailbox('inbox')
+      }
+  )
+}
+
+function debug_log(){
+  console.log("AAAYYAYAYAY");
 }
