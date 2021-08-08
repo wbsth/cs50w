@@ -1,3 +1,16 @@
 textarea{
     height: 100px;
 }
+
+.post-author{
+
+}
+
+.post-content{
+
+}
+
+.post-date{
+    font-size: 12px;
+    color:gray;
+}

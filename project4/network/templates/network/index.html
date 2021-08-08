@@ -29,8 +29,19 @@
         </div>
     {% endif %}
 
-    <div class="container border rounded mx-4 my-2">
-        placeholder wszystkie posty
-    </div>
+    {% for post in posts %}
+        <div class="container border rounded mx-4 my-2">
+            <div class="row m-2">
+                <div class="col font-weight-bold">{{ post.user }}</div>
+            </div>
+            <div class="row m-2">
+                <div class="col">{{ post.content }}</div>
+            </div>
+            <div class="row m-2">
+                <div class="col post-date" >{{ post.addedOn }}</div>
+            </div>
+        </div>
+    {% endfor %}
+
 
 {% endblock %}

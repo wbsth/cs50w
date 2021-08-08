@@ -8,6 +8,11 @@ from .models import User, Post
 
 
 def index(request):
+
+    context = {
+        "posts": Post.objects.all()
+    }
+
     if request.method == "POST":
         # attempt to send new post
         post_body = request.POST["post-text"]
@@ -16,10 +21,10 @@ def index(request):
             post = Post(user=request.user, content=post_body)
             post.save()
 
-        return render(request, "network/index.html")
+        return render(request, "network/index.html", context)
 
     else:
-        return render(request, "network/index.html")
+        return render(request, "network/index.html", context)
 
 
 def login_view(request):
