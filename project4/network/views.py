@@ -77,3 +77,17 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+
+
+def user_view(request, user_name):
+    if request.method == "POST":
+        pass
+
+    context = {
+        'user_name': user_name,
+        'following': 0,
+        'followers': 0,
+        'posts': Post.objects.filter(user__username=user_name),
+        'follow_status': 0
+    }
+    return render(request, 'network/user_view.html', context)

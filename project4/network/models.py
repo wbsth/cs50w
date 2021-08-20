@@ -3,7 +3,13 @@ from django.db import models
 
 
 class User(AbstractUser):
-    pass
+    followers = models.ManyToManyField('self', symmetrical=False, blank=True)
+
+    def count_followers(self):
+        return self.followers.count()
+
+    def count_following(self):
+        return User.objects.filter(followers=self).count()
 
 
 class Post(models.Model):
