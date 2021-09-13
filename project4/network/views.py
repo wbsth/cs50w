@@ -80,14 +80,33 @@ def register(request):
 
 
 def user_view(request, user_name):
+    user_profile = User.objects.get(username=user_name)
+    current_user = request.user
+
     if request.method == "POST":
+        # check the status
+        status = request.POST['follow-button']
+        if status == 'Unfollow':
+            user_profile.followers.remove(current_user)
+        elif status == 'Follow':
+            user_profile.followers.add(current_user)
         pass
+
+    # determine follow button visibility
+    follow_button_visibility = request.user.is_authenticated and request.user.username != user_name
+
+    # determine follow button text
+    if current_user in user_profile.followers.all():
+        follow_text = 'Unfollow'
+    else:
+        follow_text = 'Follow'
 
     context = {
         'user_name': user_name,
         'following': 0,
         'followers': 0,
         'posts': Post.objects.filter(user__username=user_name),
-        'follow_status': 0
+        'follow_button_visible': follow_button_visibility,
+        'follow_text': follow_text
     }
     return render(request, 'network/user_view.html', context)

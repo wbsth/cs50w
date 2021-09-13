@@ -5,9 +5,12 @@
         <div class="row my-2">
             <div class="col-2"><h3>{{ user_name }}</h3></div>
             <div class="col-1">
-                <form action="" method="post">
-                    <input class="btn btn-primary" type="submit" value="Follow">
+                {% if follow_button_visible %}
+                    <form action="" method="post">
+                        {% csrf_token %}
+                    <input class="btn btn-primary" type="submit" name="follow-button" value="{{ follow_text }}">
                 </form>
+                {% endif %}
             </div>
         </div>
 
