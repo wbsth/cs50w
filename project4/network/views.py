@@ -113,5 +113,17 @@ def user_view(request, user_name):
         'follow_button_visible': follow_button_visibility,
         'follow_text': follow_text
     }
-    
+
     return render(request, 'network/user_view.html', context)
+
+
+def following(request):
+    followed_users = User.objects.filter(followers=request.user)
+    posts_by_followed = Post.objects.filter(user__in=followed_users)
+
+    context = {
+        "posts": posts_by_followed
+    }
+
+    return render(request, "network/following.html", context)
+

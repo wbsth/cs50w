@@ -24,7 +24,7 @@
                 </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Following</a>
+                        <a class="nav-link" href="{% url 'following' %}">Following</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
