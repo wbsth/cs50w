@@ -3,14 +3,23 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.core.paginator import Paginator
 
 from .models import User, Post
 
 
 def index(request):
+    posts_per_page = 10
+    post_list = Post.objects.all()
+    paginator = Paginator(post_list, posts_per_page)
+
+    get_page = request.GET.get('p')
+    page_number = get_page if get_page is not None else 1
+    current_page = paginator.get_page(page_number)
 
     context = {
-        "posts": Post.objects.all()
+        "current_page": current_page,
+        "pagination_needed": paginator.num_pages > 1
     }
 
     if request.method == "POST":
