@@ -101,12 +101,17 @@ def user_view(request, user_name):
     else:
         follow_text = 'Follow'
 
+    # determine followers and follower count
+    followers_count = user_profile.count_followers()
+    following_count = user_profile.count_following()
+
     context = {
         'user_name': user_name,
-        'following': 0,
-        'followers': 0,
+        'following': following_count,
+        'followers': followers_count,
         'posts': Post.objects.filter(user__username=user_name),
         'follow_button_visible': follow_button_visibility,
         'follow_text': follow_text
     }
+    
     return render(request, 'network/user_view.html', context)
