@@ -9,10 +9,10 @@ from .models import User, Post
 
 
 def index(request):
-    posts_per_page = 10
+    posts_per_page = 2
     post_list = Post.objects.all()
-    paginator = Paginator(post_list, posts_per_page)
 
+    paginator = Paginator(post_list, posts_per_page)
     get_page = request.GET.get('p')
     page_number = get_page if get_page is not None else 1
     current_page = paginator.get_page(page_number)

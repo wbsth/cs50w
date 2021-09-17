@@ -1,4 +1,5 @@
 {% extends "network/layout.html" %}
+{% load static %}
 
 {% block body %}
 
@@ -30,11 +31,16 @@
     {% endif %}
 
     {% for post in current_page.object_list %}
-        <div class="container border rounded mx-4 my-2">
+        <div class="container border rounded mx-4 my-2 post-edit-link">
             <div class="row m-2">
                 <div class="col font-weight-bold"><a href="/user/{{ post.user }}">{{ post.user }}</a> </div>
             </div>
-            <div class="row m-2">
+            {% if user.is_authenticated and post.user == user %}
+                <div class="row mx-2">
+                    <div class="col">edit</div>
+                </div>
+            {% endif %}
+            <div class="row m-2 post-context">
                 <div class="col">{{ post.content }}</div>
             </div>
             <div class="row m-2">
@@ -62,3 +68,7 @@
     {% endif %}
 
 {% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/index-page.js' %}"></script>
+{% endblock script %}
