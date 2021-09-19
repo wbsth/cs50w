@@ -31,17 +31,18 @@
     {% endif %}
 
     {% for post in current_page.object_list %}
-        <div class="container border rounded mx-4 my-2 post-edit-link">
+        <div class="container border rounded mx-4 my-2 post-div">
+            <input type="hidden" class="post-id" value="{{ post.id }}"/>
             <div class="row m-2">
                 <div class="col font-weight-bold"><a href="/user/{{ post.user }}">{{ post.user }}</a> </div>
             </div>
             {% if user.is_authenticated and post.user == user %}
                 <div class="row mx-2">
-                    <div class="col">edit</div>
+                    <div class="col"><span class="edit-label">edit</span></div>
                 </div>
             {% endif %}
-            <div class="row m-2 post-context">
-                <div class="col">{{ post.content }}</div>
+            <div class="row m-2">
+                <div class="col post-context">{{ post.content }}</div>
             </div>
             <div class="row m-2">
                 <div class="col post-date" >{{ post.addedOn }}</div>

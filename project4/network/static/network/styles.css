@@ -14,3 +14,13 @@ textarea{
     font-size: 12px;
     color:gray;
 }
+
+.edit-label,
+.cancel-edit-label {
+    color:dodgerblue;
+}
+
+.edit-label:hover,
+.cancel-edit-label:hover{
+    cursor: pointer;
+}

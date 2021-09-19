@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.core.paginator import Paginator
+import json
 
 from .models import User, Post
 
@@ -136,3 +137,18 @@ def following(request):
 
     return render(request, "network/following.html", context)
 
+
+def post_edit(request, post_id):
+    # get post with that id
+    post = Post.objects.filter(id=post_id)
+
+    # check if that post exist
+    if len(post) == 1:
+        post_to_edit = post[0]
+        read_json = json.loads(request.body)
+        post_to_edit.content = read_json['edited_text']
+        post_to_edit.save()
+        return HttpResponse(200)
+
+    else:
+        return HttpResponse(404)
