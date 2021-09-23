@@ -1,0 +1,75 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+    <div class="container m-1">
+        <h3>All posts:</h3>
+    </div>
+
+    {% if user.is_authenticated %}
+        <div class="container border rounded mx-4 my-2">
+            <div class="row my-2">
+                <div class="col font-weight-bold">
+                    New post:
+                </div>
+            </div>
+
+            <div class="row" m-2>
+                <div class="col">
+                    <form method="post" action="">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <textarea type="text" name="post-text" class="form-control mb-2" id="newPostText" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary mb-2">Post</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    {% endif %}
+
+    {% for post in current_page.object_list %}
+        <div class="container border rounded mx-4 my-2 post-div">
+            <input type="hidden" class="post-id" value="{{ post.id }}"/>
+            <div class="row m-2">
+                <div class="col font-weight-bold"><a href="/user/{{ post.user }}">{{ post.user }}</a> </div>
+            </div>
+            {% if user.is_authenticated and post.user == user %}
+                <div class="row mx-2">
+                    <div class="col"><span class="edit-label">edit</span></div>
+                </div>
+            {% endif %}
+            <div class="row m-2">
+                <div class="col post-context">{{ post.content }}</div>
+            </div>
+            <div class="row m-2">
+                <div class="col post-date" >{{ post.addedOn }}</div>
+            </div>
+            <div class="row m-2">
+                <div class="col" ><span class="like-count-label {% if user in post.liked_by.all %}liked-post{% endif %}">{{ post.count_likes }}</span> ❤</div>
+            </div>
+        </div>
+    {% endfor %}
+
+    {% if pagination_needed %}
+        <div class="mx-4 my-2">
+            <nav>
+              <ul class="pagination">
+                  {% if current_page.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?p={{ current_page.previous_page_number }}">Previous</a></li>
+                  {% endif %}
+                  {% if current_page.has_next %}
+                    <li class="page-item"><a class="page-link" href="?p={{ current_page.next_page_number }}">Next</a></li>
+                  {% endif %}
+              </ul>
+            </nav>
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/index-page.js' %}"></script>
+{% endblock script %}

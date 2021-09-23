@@ -1,0 +1,31 @@
+textarea{
+    height: 100px;
+}
+
+.post-author{
+
+}
+
+.post-content{
+
+}
+
+.post-date{
+    font-size: 12px;
+    color:gray;
+}
+
+.edit-label,
+.cancel-edit-label {
+    color:dodgerblue;
+}
+
+.like-count-label,
+.edit-label:hover,
+.cancel-edit-label:hover{
+    cursor: pointer;
+}
+
+.liked-post{
+    font-weight: bold;
+}

@@ -1,0 +1,38 @@
+{% extends "network/index.html" %}
+
+{% block body %}
+    <div class="container">
+        <div class="row my-2">
+            <div class="col-2"><h3>{{ user_name }}</h3></div>
+            <div class="col-1">
+                {% if follow_button_visible %}
+                    <form action="" method="post">
+                        {% csrf_token %}
+                    <input class="btn btn-primary" type="submit" name="follow-button" value="{{ follow_text }}">
+                </form>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row my-2">
+            <div class="col-2">following: {{ following }}</div>
+            <div class="col-2">followers: {{ followers }}</div>
+        </div>
+
+        <div class="row my-2">
+            <div class="col">
+                {% for post in posts %}
+                    <div class="row my-2 border rounded">
+                        <div class="col">
+                            <p class="font-weight-light" style="font-size: 12px">added on: {{ post.addedOn }}</p>
+                            <p>{{ post.content }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {# display number of the followers, and number of following #}
+    {# display all user posts #}
+    {# follow/unfollow button, active only for other users #}
+{% endblock %}
