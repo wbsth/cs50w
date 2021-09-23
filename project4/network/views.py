@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.core.paginator import Paginator
@@ -10,7 +10,7 @@ from .models import User, Post
 
 
 def index(request):
-    posts_per_page = 2
+    posts_per_page = 10
     post_list = Post.objects.all()
 
     paginator = Paginator(post_list, posts_per_page)
@@ -31,10 +31,7 @@ def index(request):
             post = Post(user=request.user, content=post_body)
             post.save()
 
-        return render(request, "network/index.html", context)
-
-    else:
-        return render(request, "network/index.html", context)
+    return render(request, "network/index.html", context)
 
 
 def login_view(request):
@@ -139,16 +136,49 @@ def following(request):
 
 
 def post_edit(request, post_id):
-    # get post with that id
-    post = Post.objects.filter(id=post_id)
+    if request.method == "POST":
+        # get post with that id
+        post = Post.objects.filter(id=post_id)
 
-    # check if that post exist
-    if len(post) == 1:
-        post_to_edit = post[0]
-        read_json = json.loads(request.body)
-        post_to_edit.content = read_json['edited_text']
-        post_to_edit.save()
-        return HttpResponse(200)
+        # check if that post exist
+        if len(post) == 1:
+            post_to_edit = post[0]
+            read_json = json.loads(request.body)
+            post_to_edit.content = read_json['edited_text']
+            post_to_edit.save()
+            return HttpResponse(200)
 
-    else:
-        return HttpResponse(404)
+    return HttpResponse(404)
+
+
+def like_post(request, post_id):
+    if request.method == "POST":
+        # get post with that id
+        post = Post.objects.filter(id=post_id)
+
+        # check if that post exist
+        if len(post) == 1:
+            post_to_edit = post[0]
+            read_json = json.loads(request.body)
+            # determine if post is to be liked or unlike
+            action = read_json['action']
+
+            # check if post is liked by requesting user
+            post_is_liked = request.user in post_to_edit.liked_by.all()
+
+            if action == "like" and not post_is_liked:
+                post_to_edit.liked_by.add(request.user)
+                post_to_edit.save()
+            elif post_is_liked:
+                post_to_edit.liked_by.remove(request.user)
+                post_to_edit.save()
+
+            like_count = post_to_edit.count_likes()
+            like_status = request.user in post_to_edit.liked_by.all()
+
+            response = {'like_count': like_count,
+                        'like_status': like_status}
+
+            return JsonResponse(response)
+
+    return HttpResponse(404)

@@ -48,7 +48,7 @@
                 <div class="col post-date" >{{ post.addedOn }}</div>
             </div>
             <div class="row m-2">
-                <div class="col" >0 ❤</div>
+                <div class="col" ><span class="like-count-label {% if user in post.liked_by.all %}liked-post{% endif %}">{{ post.count_likes }}</span> ❤</div>
             </div>
         </div>
     {% endfor %}

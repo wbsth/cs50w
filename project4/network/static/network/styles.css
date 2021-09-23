@@ -20,7 +20,12 @@ textarea{
     color:dodgerblue;
 }
 
+.like-count-label,
 .edit-label:hover,
 .cancel-edit-label:hover{
     cursor: pointer;
+}
+
+.liked-post{
+    font-weight: bold;
 }

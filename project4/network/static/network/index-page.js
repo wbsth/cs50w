@@ -1,12 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
-  prepare_edit_links();
+  prepare_posts();
 });
 
-function prepare_edit_links(){
+function prepare_posts(){
   let posts = document.querySelectorAll("div.post-div");
   posts.forEach((input) => {
     const edit_link = input.querySelector("span.edit-label");
     edit_link.addEventListener('click', ()=>edit_post(input));
+
+    const like_label = input.querySelector("span.like-count-label")
+    like_label.addEventListener('click', ()=>like_post_click(input));
   });
 }
 
@@ -60,7 +63,7 @@ function edit_post(post){
               edited_text: new_text,
           })
        }).then(response => {
-           if(response.status = 200){
+           if(response.status === 200){
                 restoreView(new_text);
            }
            else{
@@ -75,6 +78,42 @@ function edit_post(post){
       post_text_div.innerText = postContent;
       edit_text_div.style.display="block";
   }
+}
+
+function like_post_click(post) {
+    console.log("CLICK")
+    let post_id = post.querySelector("input.post-id").value;
+
+    const csrftoken = getCookie('csrftoken');
+    const like_label = post.querySelector("span.like-count-label")
+
+    let like_action = 'like';
+
+    const request = new Request(
+        `/post/${post_id}/like`,
+        {headers: {'X-CSRFToken': csrftoken}});
+
+    fetch(request, {
+          method: 'POST',
+          body: JSON.stringify({
+              action: like_action,
+          })
+       }).then(response => response.json())
+         .then(data=>{
+             handle_like_count(data["like_count"], data["like_status"]);
+         });
+
+    function handle_like_count(like_count, like_status){
+        like_label.innerText = like_count;
+        //console.log(like_label.classList);
+        if(like_status){
+            like_label.classList.add("liked-post")
+        }
+        else{
+            like_label.classList.remove("liked-post")
+        }
+    }
+
 }
 
 function getCookie(name) {
