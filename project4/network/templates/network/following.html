@@ -1,0 +1,24 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    <div class="container m-1">
+        <h3>Posts by followed users:</h3>
+    </div>
+
+    {% for post in posts %}
+        <div class="container border rounded mx-4 my-2">
+            <div class="row m-2">
+                <div class="col font-weight-bold"><a href="/user/{{ post.user }}">{{ post.user }}</a> </div>
+            </div>
+            <div class="row m-2">
+                <div class="col">{{ post.content }}</div>
+            </div>
+            <div class="row m-2">
+                <div class="col post-date" >{{ post.addedOn }}</div>
+            </div>
+            <div class="row m-2">
+                <div class="col" >0 ❤</div>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
